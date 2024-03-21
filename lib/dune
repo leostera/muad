@@ -1,4 +1,4 @@
 (library
  (public_name muad)
  (name muad)
- (libraries dynlink))
+ (libraries dynlink unix))

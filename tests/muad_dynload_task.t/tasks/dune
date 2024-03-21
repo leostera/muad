@@ -1,4 +1,5 @@
-(library
+(executable
+ (modes plugin)
  (name salute)
  (modules salute)
  (libraries muad))

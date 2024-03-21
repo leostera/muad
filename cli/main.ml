@@ -1,4 +1,5 @@
 let () =
+  Muad.Dune.build_tasks ();
   Muad.Task.load_all ();
   let args = Sys.argv |> Array.to_list in
   let help () = Muad.all_tasks_help () |> print_endline in

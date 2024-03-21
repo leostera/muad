@@ -1,3 +1,23 @@
+module Dune = struct
+  let build_tasks () = Unix.system "dune build @tasks/default" |> ignore
+end
+
+module FileWalker = struct
+  let read_dir root =
+    let dir = Unix.opendir root in
+    let rec read_dirs dir acc =
+      try
+        let file = Unix.readdir dir in
+        match Filename.extension file with
+        | ".cmxs" -> read_dirs dir ((root ^ Filename.dir_sep ^ file) :: acc)
+        | _ -> read_dirs dir acc
+      with End_of_file -> acc
+    in
+    let files = read_dirs dir [] in
+    Unix.closedir dir;
+    files
+end
+
 module Task = struct
   module type Intf = sig
     val name : string
@@ -11,7 +31,7 @@ module Task = struct
 
   let load_all () =
     let root = "./_build/default/tasks/" in
-    let cmos = [ root ^ "salute.cmo" ] in
+    let cmos = FileWalker.read_dir root in
     List.iter
       (fun cmo ->
         let cmxs = Dynlink.adapt_filename cmo in
