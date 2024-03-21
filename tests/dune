@@ -1,0 +1,4 @@
+(cram
+ (package muad)
+ (deps
+  (package muad)))

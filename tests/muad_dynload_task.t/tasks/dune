@@ -1,0 +1,4 @@
+(library
+ (name salute)
+ (modules salute)
+ (libraries muad))

@@ -1,0 +1,5 @@
+(executable
+ (public_name muad)
+ (package muad)
+ (name main)
+ (libraries muad))
