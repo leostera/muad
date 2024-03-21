@@ -1,6 +1,7 @@
 module Task = struct
   module type Intf = sig
     val name : string
+    val short_help : string
     val help : string
     val run : string list -> unit
   end
@@ -24,16 +25,20 @@ module Task = struct
   let tasks () = !tasks
 end
 
-let help () =
+let all_tasks_help () =
   Task.tasks ()
-  |> List.map (fun (module T : Task.Intf) -> "muad " ^ T.name ^ "    " ^ T.help)
+  |> List.map (fun (module T : Task.Intf) ->
+         "muad " ^ T.name ^ "    " ^ T.short_help)
   |> String.concat "\n"
 
-let run_task name args =
+let with_task name fn =
   let task =
     Task.tasks ()
     |> List.find_opt (fun (module T : Task.Intf) -> String.equal T.name name)
   in
   match task with
-  | Some (module T) -> T.run args
+  | Some task -> fn task
   | None -> failwith (Format.sprintf "Task %S not found" name)
+
+let run_task name args = with_task name @@ fun (module T) -> T.run args
+let help name _args = with_task name @@ fun (module T) -> "\n" ^ T.help ^ "\n"
